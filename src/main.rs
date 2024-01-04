@@ -4,6 +4,7 @@
 use std::net::UdpSocket;
 
 
+#[allow(dead_code)]
 struct DnsHeader{
     id: u16, // Packet Identifier (ID)
     qr: u8, // Query/Response Indicator (QR)
