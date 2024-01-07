@@ -84,13 +84,13 @@ impl DnsQuestion{
         question.domain_name = String::from("codecrafters.io");
         question.question_type = 1;
         question.question_class = 1;
-        self.conversion()
+        self.conversion(question.domain_name)
     }
 
-    fn conversion(&self) -> Vec<u8>{
+    fn conversion(&self, domain_name: String) -> Vec<u8>{
         let mut encoded_value: Vec<u8> = Vec::new();
-        println!("{}", self.domain_name);
-        let domain_name = self.domain_name.split_once('.').expect("Could not split the domain name");
+        println!("{}", domain_name);
+        let domain_name = domain_name.split_once('.').expect("Could not split the domain name");
         let label1_len = domain_name.0.len();
         let label2_len = domain_name.1.len();
         encoded_value.extend_from_slice(format!("{:x}", label1_len).as_bytes());
