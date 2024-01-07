@@ -90,6 +90,7 @@ impl DnsQuestion{
     fn conversion(&self) -> Vec<u8>{
         let mut encoded_value: Vec<u8> = Vec::new();
         let domain_name = self.domain_name.split_once(".").expect("Could not split the domain name");
+        println!("{:?}", domain_name);
         let label1_len = domain_name.0.len();
         let label2_len = domain_name.1.len();
         encoded_value.extend_from_slice(format!("{:x}", label1_len).as_bytes());
