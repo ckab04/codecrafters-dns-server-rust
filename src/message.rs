@@ -60,6 +60,7 @@ impl Default for DnsHeader{
 
 
 
+#[derive(Debug)]
 pub struct DnsQuestion{
     domain_name: String,
     question_type: u16,

@@ -23,7 +23,10 @@ fn main() {
                 let mut header_info = DnsHeader::default();
                 header_info.qd_count += 1;
                 let mut  response = header_info.pack();
-                let question = DnsQuestion::default().to_bytes();
+                let q = DnsQuestion::default();
+                println!("Question type {:?}", q);
+                let question = q.to_bytes();
+                //let question = DnsQuestion::default().to_bytes();
                 response.extend_from_slice(&question);
                 udp_socket
                     .send_to(&response, source)
