@@ -72,7 +72,7 @@ pub struct DnsQuestion{
 impl Default for  DnsQuestion{
     fn default() -> Self {
         Self{
-            domain_name: "".to_string(),
+            domain_name: "codecrafters.io".to_string(),
             question_type: 1,
             question_class: 1,
         }
