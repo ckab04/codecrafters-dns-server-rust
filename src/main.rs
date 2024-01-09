@@ -4,7 +4,7 @@
 mod message;
 use std::net::UdpSocket;
 use message::{DnsHeader, DnsQuestion};
-
+use crate::message::DnsAnswer;
 
 
 fn main() {
@@ -27,7 +27,10 @@ fn main() {
                 println!("Question type {:?}", q);
                 let question = q.to_bytes();
                 //let question = DnsQuestion::default().to_bytes();
+                let answer = DnsAnswer::get_answer();
+                header_info.an_count += 1;
                 response.extend_from_slice(&question);
+                response.extend_from_slice(&answer);
                 udp_socket
                     .send_to(&response, source)
                     .expect("Failed to send response");

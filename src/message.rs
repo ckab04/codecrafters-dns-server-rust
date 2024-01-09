@@ -1,3 +1,5 @@
+use std::net::Ipv4Addr;
+
 #[allow(dead_code)]
 pub struct DnsHeader{
     id: u16, // Packet Identifier (ID)
@@ -10,7 +12,7 @@ pub struct DnsHeader{
     z: u8, // reserved
     r_code: u8, // Response Code (RCODE)
     pub qd_count: u16, // Question Count (QDCOUNT)
-    an_count: u16, //  Answer Record Count (ANCOUNT)
+    pub an_count: u16, //  Answer Record Count (ANCOUNT)
     ns_count: u16, // Authority Record Count (NSCOUNT)
     ar_count: u16, //  Additional Record Count (ARCOUNT)
 
@@ -91,23 +93,44 @@ impl DnsQuestion{
     fn conversion(&self, domain_name: String) -> Vec<u8>{
         let mut encoded_value: Vec<u8> = Vec::new();
 
-        let domain_name = domain_name.split_once('.').expect("Could not split the domain name");
-        println!("{:?}", domain_name);
-        let label1_len = domain_name.0.len();
-        let label2_len = domain_name.1.len();
-        //encoded_value.extend_from_slice(format!("{:x}", label1_len).as_bytes());
-        encoded_value.push(label1_len as u8);
-        encoded_value.extend_from_slice(domain_name.0.as_bytes());
-        //encoded_value.extend_from_slice(format!("{:x}", label2_len).as_bytes());
-        encoded_value.push(label2_len as u8);
-        encoded_value.extend_from_slice(domain_name.1.as_bytes());
-        encoded_value.push(0);
+        // let domain_name = domain_name.split_once('.').expect("Could not split the domain name");
+        // println!("{:?}", domain_name);
+        // let label1_len = domain_name.0.len();
+        // let label2_len = domain_name.1.len();
+        // //encoded_value.extend_from_slice(format!("{:x}", label1_len).as_bytes());
+        // encoded_value.push(label1_len as u8);
+        // encoded_value.extend_from_slice(domain_name.0.as_bytes());
+        // //encoded_value.extend_from_slice(format!("{:x}", label2_len).as_bytes());
+        // encoded_value.push(label2_len as u8);
+        // encoded_value.extend_from_slice(domain_name.1.as_bytes());
+        // encoded_value.push(0);
+        encoded_value = encoded_label(&self.domain_name);
         encoded_value.extend_from_slice(&self.question_type.to_be_bytes());
         encoded_value.extend_from_slice(&self.question_class.to_be_bytes());
         encoded_value
     }
 
+}
 
+fn encoded_label(domain_name: &str)-> Vec<u8>{
+    let mut encoded_value: Vec<u8> = Vec::new();
+
+    domain_name.split('.').for_each(|label|{
+        encoded_value.push(label.len() as u8);
+        encoded_value.extend_from_slice(label.as_bytes());
+    }
+    );
+    // println!("{:?}", domain_name);
+    // let label1_len = domain_name.0.len();
+    // let label2_len = domain_name.1.len();
+    // //encoded_value.extend_from_slice(format!("{:x}", label1_len).as_bytes());
+    // encoded_value.push(label1_len as u8);
+    // encoded_value.extend_from_slice(domain_name.0.as_bytes());
+    // //encoded_value.extend_from_slice(format!("{:x}", label2_len).as_bytes());
+    // encoded_value.push(label2_len as u8);
+    // encoded_value.extend_from_slice(domain_name.1.as_bytes());
+    encoded_value.push(0);
+    encoded_value
 }
 
 
@@ -141,3 +164,61 @@ enum CLASS{
     CH      =3,// the CHAOS class
     HS    = 4,// Hesiod [Dyer 87]
 }
+
+pub struct DnsAnswer{
+    name: String,
+    type_answer: u16,
+    class: u16,
+    ttl: u32,
+    length: u16,
+    data: String,
+}
+
+impl DnsAnswer{
+
+    pub fn get_answer() -> Vec<u8>{
+
+        let mut encoded_anwer: Vec<u8> = Vec::new();
+
+        let mut answer = DnsAnswer{
+            name: String::from("codecrafters.io"),
+            type_answer: 1,
+            class: 1,
+            ttl: 60,
+            length: 4,
+            data: String::new(),
+        };
+
+        let encoded_domain_name = encoded_label(&answer.name);
+        encoded_anwer.extend_from_slice(&encoded_domain_name);
+        encoded_anwer.extend_from_slice(&answer.type_answer.to_be_bytes());
+        encoded_anwer.extend_from_slice(&answer.class.to_be_bytes());
+        encoded_anwer.extend_from_slice(&answer.ttl.to_be_bytes());
+        encoded_anwer.extend_from_slice(&answer.length.to_be_bytes());
+
+        let ipv4 = answer.data.parse::<Ipv4Addr>().expect("Could not parse the ipv4 Address").octets();
+        encoded_anwer.extend_from_slice(&*ipv4);
+        encoded_anwer
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
