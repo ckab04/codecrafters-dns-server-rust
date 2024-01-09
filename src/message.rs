@@ -99,6 +99,8 @@ impl DnsQuestion{
         encoded_value.extend_from_slice(format!("{:x}", label2_len).as_bytes());
         encoded_value.extend_from_slice(domain_name.1.as_bytes());
         encoded_value.push(b'\x00');
+        encoded_value.extend_from_slice(&self.question_type.to_be_bytes());
+        encoded_value.extend_from_slice(&self.question_class.to_be_bytes());
         encoded_value
     }
 
