@@ -180,13 +180,13 @@ impl DnsAnswer{
 
         let mut encoded_anwer: Vec<u8> = Vec::new();
 
-        let mut answer = DnsAnswer{
+        let answer = DnsAnswer{
             name: String::from("codecrafters.io"),
             type_answer: 1,
             class: 1,
             ttl: 60,
             length: 4,
-            data: String::new(),
+            data: String::from("8.8.8.8"),
         };
 
         let encoded_domain_name = encoded_label(&answer.name);
