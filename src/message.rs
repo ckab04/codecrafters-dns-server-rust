@@ -71,8 +71,8 @@ impl Default for  DnsQuestion{
     fn default() -> Self {
         Self{
             domain_name: "".to_string(),
-            question_type: 0,
-            question_class: 0,
+            question_type: 1,
+            question_class: 1,
         }
     }
 }
