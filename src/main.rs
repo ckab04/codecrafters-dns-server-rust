@@ -22,13 +22,14 @@ fn main() {
                 //let response = [];
                 let mut header_info = DnsHeader::default();
                 header_info.qd_count += 1;
+                header_info.an_count += 1;
                 let mut  response = header_info.pack();
                 let q = DnsQuestion::default();
                 println!("Question type {:?}", q);
                 let question = q.to_bytes();
                 //let question = DnsQuestion::default().to_bytes();
                 let answer = DnsAnswer::get_answer();
-                header_info.an_count += 1;
+
                 response.extend_from_slice(&question);
                 response.extend_from_slice(&answer);
                 udp_socket
