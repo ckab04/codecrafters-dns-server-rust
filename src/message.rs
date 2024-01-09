@@ -165,6 +165,7 @@ enum CLASS{
     HS    = 4,// Hesiod [Dyer 87]
 }
 
+#[derive(Debug)]
 pub struct DnsAnswer{
     name: String,
     type_answer: u16,
@@ -188,7 +189,7 @@ impl DnsAnswer{
             length: 4,
             data: String::from("8.8.8.8"),
         };
-
+        println!("Answer  type {:?}", answer);
         let encoded_domain_name = encoded_label(&answer.name);
         encoded_anwer.extend_from_slice(&encoded_domain_name);
         encoded_anwer.extend_from_slice(&answer.type_answer.to_be_bytes());
