@@ -197,7 +197,7 @@ impl DnsAnswer{
         encoded_anwer.extend_from_slice(&answer.length.to_be_bytes());
 
         let ipv4 = answer.data.parse::<Ipv4Addr>().expect("Could not parse the ipv4 Address").octets();
-        encoded_anwer.extend_from_slice(&*ipv4);
+        encoded_anwer.extend_from_slice(&ipv4);
         encoded_anwer
 
     }
