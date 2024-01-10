@@ -92,18 +92,6 @@ impl DnsQuestion{
 
     fn conversion(&self, domain_name: String) -> Vec<u8>{
         let mut encoded_value: Vec<u8> = Vec::new();
-
-        // let domain_name = domain_name.split_once('.').expect("Could not split the domain name");
-        // println!("{:?}", domain_name);
-        // let label1_len = domain_name.0.len();
-        // let label2_len = domain_name.1.len();
-        // //encoded_value.extend_from_slice(format!("{:x}", label1_len).as_bytes());
-        // encoded_value.push(label1_len as u8);
-        // encoded_value.extend_from_slice(domain_name.0.as_bytes());
-        // //encoded_value.extend_from_slice(format!("{:x}", label2_len).as_bytes());
-        // encoded_value.push(label2_len as u8);
-        // encoded_value.extend_from_slice(domain_name.1.as_bytes());
-        // encoded_value.push(0);
         encoded_value = encoded_label(&self.domain_name);
         encoded_value.extend_from_slice(&self.question_type.to_be_bytes());
         encoded_value.extend_from_slice(&self.question_class.to_be_bytes());
@@ -120,15 +108,6 @@ fn encoded_label(domain_name: &str)-> Vec<u8>{
         encoded_value.extend_from_slice(label.as_bytes());
     }
     );
-    // println!("{:?}", domain_name);
-    // let label1_len = domain_name.0.len();
-    // let label2_len = domain_name.1.len();
-    // //encoded_value.extend_from_slice(format!("{:x}", label1_len).as_bytes());
-    // encoded_value.push(label1_len as u8);
-    // encoded_value.extend_from_slice(domain_name.0.as_bytes());
-    // //encoded_value.extend_from_slice(format!("{:x}", label2_len).as_bytes());
-    // encoded_value.push(label2_len as u8);
-    // encoded_value.extend_from_slice(domain_name.1.as_bytes());
     encoded_value.push(0);
     encoded_value
 }
@@ -204,22 +183,4 @@ impl DnsAnswer{
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
