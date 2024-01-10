@@ -30,7 +30,7 @@ fn main() {
                 let question = q.to_bytes();
                 //let question = DnsQuestion::default().to_bytes();
                 let answer = DnsAnswer::get_answer();
-                let header_packet = str::from_utf8(&buf[0..size]).expect("Could not convert buffer to string");
+                let header_packet = String::from_utf8(buf.to_vec()).expect("Could not convert buffer to string");
                 println!("DNS PACKET: {header_packet}", );
 
                 response.extend_from_slice(&question);
