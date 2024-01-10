@@ -29,6 +29,8 @@ fn main() {
                 let question = q.to_bytes();
                 //let question = DnsQuestion::default().to_bytes();
                 let answer = DnsAnswer::get_answer();
+                let header_packet = String::from_utf8(Vec::from(&buf)).unwrap();
+                println!("DNS PACKET: {header_packet}", );
 
                 response.extend_from_slice(&question);
                 response.extend_from_slice(&answer);
