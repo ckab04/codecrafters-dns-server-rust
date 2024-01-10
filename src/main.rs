@@ -5,6 +5,7 @@ mod message;
 use std::net::UdpSocket;
 use message::{DnsHeader, DnsQuestion};
 use crate::message::DnsAnswer;
+use std::str;
 
 
 fn main() {
@@ -29,7 +30,7 @@ fn main() {
                 let question = q.to_bytes();
                 //let question = DnsQuestion::default().to_bytes();
                 let answer = DnsAnswer::get_answer();
-                let header_packet = String::from_utf8(Vec::from(&buf)).unwrap();
+                let header_packet = str::from_utf8(&buf).unwrap();
                 println!("DNS PACKET: {header_packet}", );
 
                 response.extend_from_slice(&question);
