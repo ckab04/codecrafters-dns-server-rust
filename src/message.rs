@@ -1,6 +1,8 @@
 use std::net::Ipv4Addr;
+use byteorder::{BigEndian, ByteOrder};
 
 #[allow(dead_code)]
+#[repr(C, packed)]
 pub struct DnsHeader{
     id: u16, // Packet Identifier (ID)
     qr: u8, // Query/Response Indicator (QR)
@@ -35,6 +37,35 @@ impl DnsHeader{
         buffer.extend_from_slice(&self.an_count.to_be_bytes());
         buffer.extend_from_slice(&self.ns_count.to_be_bytes());
         buffer.extend_from_slice(&self.ar_count.to_be_bytes());
+        buffer
+    }
+
+    pub(crate) unsafe fn parse_header(packet_data: &[u8]) -> DnsHeader{
+
+        let mut buffer: DnsHeader = std::mem::zeroed();
+        let mut header_bytes = std::slice::from_raw_parts_mut(&mut buffer as *mut _ as *mut u8, std::mem::size_of::<DnsHeader>());
+        header_bytes.copy_from_slice(&packet_data[0..12]);
+       /* header_bytes = &mut *Bytes::copy_from_slice(&packet_data[0..12]);
+        let bytes_reader = header_bytes.reader();
+        buffer.id = Bytes::rea*/
+
+        buffer.id = BigEndian::read_u16(&header_bytes[0..2]);
+        let flags = BigEndian::read_u16(&header_bytes[2..4]);
+        buffer.qd_count = BigEndian::read_u16(&header_bytes[4..6]);
+        buffer.an_count = BigEndian::read_u16(&header_bytes[6..8]);
+        buffer.ns_count = BigEndian::read_u16(&header_bytes[8..10]);
+        buffer.ar_count = BigEndian::read_u16(&header_bytes[10..12]);
+        let flag1 = (flags >> 8) as u8 & 0x00ff;
+        let flag2 = ((flags & 0xff00) >> 8) as u8;
+        buffer.qr= (flag1 >> 7) & 0x01;
+        buffer.opcode = (flag1 >> 3)  & 0x0f;
+        buffer.aa = (flag1 >> 2) & 0x01;
+        buffer.tc = (flag1 >> 1) & 0x01;
+        buffer.rd = flag1 & 0x01;
+
+        buffer.ra = (flag2 >> 7) & 0x01;
+        buffer.z = (flag2 >> 4) & 0x07;
+        buffer.r_code = (flag2) & 0x0f;
         buffer
     }
 

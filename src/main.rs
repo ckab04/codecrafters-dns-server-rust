@@ -5,7 +5,6 @@ mod message;
 use std::net::UdpSocket;
 use message::{DnsHeader, DnsQuestion};
 use crate::message::DnsAnswer;
-use std::str;
 
 
 fn main() {
@@ -21,10 +20,12 @@ fn main() {
             Ok((size, source)) => {
                 println!("Received {} bytes from {}", size, source);
                 //let response = [];
-                let mut header_info = DnsHeader::default();
+                //let mut header_info = DnsHeader::default();
+                let mut header_info = unsafe {DnsHeader::parse_header(&buf)};
                 header_info.qd_count += 1;
                 header_info.an_count += 1;
                 let mut  response = header_info.pack();
+                //let mut  response = unsafe {DnsHeader::parse_header(&buf)};
                 let q = DnsQuestion::default();
                 println!("Question type {:?}", q);
                 let question = q.to_bytes();
