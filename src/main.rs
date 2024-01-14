@@ -25,6 +25,7 @@ fn main() {
                 header_info.qd_count += 1;
                 header_info.an_count += 1;
                 let mut  response = header_info.pack();
+                //let mut  response = header_info;
                 //let mut  response = unsafe {DnsHeader::parse_header(&buf)};
                 let q = DnsQuestion::default();
                 println!("Question type {:?}", q);

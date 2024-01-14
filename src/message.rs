@@ -43,6 +43,7 @@ impl DnsHeader{
     pub(crate) unsafe fn parse_header(packet_data: &[u8]) -> DnsHeader{
 
         let mut buffer: DnsHeader = std::mem::zeroed();
+        //let mut buffer = Vec::new();
         //let mut header_bytes = std::slice::from_raw_parts_mut(&mut buffer as *mut _ as *mut u8, std::mem::size_of::<DnsHeader>());
         let mut header_bytes: &[u8] = packet_data;
         //println!("Size of Dns Header = {}", std::mem::size_of::<DnsHeader>());
